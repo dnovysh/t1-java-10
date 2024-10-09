@@ -9,6 +9,9 @@
   <property name="schema" value="public"/>
 
   <include file="2024/09/db.changelog-start.xml" relativeToChangelogFile="true"/>
+  <include file="logging/logging-changelog.xml" relativeToChangelogFile="true"/>
   <include file="master-data/master-data-changelog.xml" relativeToChangelogFile="true"/>
+  <include file="transactional-data/transactional-data-changelog.xml"
+    relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

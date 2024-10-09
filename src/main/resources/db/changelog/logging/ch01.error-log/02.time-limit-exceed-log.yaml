@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: create.table.time_limit_exceed_log
+      author: dnovysh
+      dbms: postgresql
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            tableExists:
+              schemaName: ${schema}
+              tableName: time_limit_exceed_log
+      changes:
+        - createTable:
+            schemaName: ${schema}
+            tableName: time_limit_exceed_log
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_time_limit_exceed_log_id
+              - column:
+                  name: method_signature
+                  type: text
+              - column:
+                  name: running_time_millis
+                  type: bigint

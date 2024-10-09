@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: create.table.data_source_error_log
+      author: dnovysh
+      dbms: postgresql
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            tableExists:
+              schemaName: ${schema}
+              tableName: data_source_error_log
+      changes:
+        - createTable:
+            schemaName: ${schema}
+            tableName: data_source_error_log
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_data_source_error_log_id
+              - column:
+                  name: method_signature
+                  type: text
+              - column:
+                  name: message
+                  type: text
+              - column:
+                  name: stack_trace
+                  type: text

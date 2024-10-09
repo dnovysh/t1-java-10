@@ -6,6 +6,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
   objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
 
-  <include file="ch01.account/01.account.yaml" relativeToChangelogFile="true"/>
+  <include file="ch01.error-log/01.data-source-error-log.yaml" relativeToChangelogFile="true"/>
+  <include file="ch01.error-log/02.time-limit-exceed-log.yaml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
