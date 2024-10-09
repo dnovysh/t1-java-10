@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: create.table.account
+      author: dnovysh
+      dbms: postgresql
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            tableExists:
+              schemaName: ${schema}
+              tableName: account
+      changes:
+        - createTable:
+            schemaName: ${schema}
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  startWith: 10000
+                  incrementBy: 1
+                  generationType: BY DEFAULT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_account_id
+              - column:
+                  name: client_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_account_client
+                    references: client(id)
+              - column:
+                  name: account_type
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: numeric(19, 4)
+                  constraints:
+                    nullable: false

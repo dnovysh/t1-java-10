@@ -6,5 +6,6 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
   objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
 
+  <include file="ch01.account/01.account.yaml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
