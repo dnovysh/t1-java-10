@@ -7,5 +7,6 @@
   objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
 
   <include file="ch01.account/01.account.yaml" relativeToChangelogFile="true"/>
+  <include file="ch02.transaction/01.transaction.yaml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

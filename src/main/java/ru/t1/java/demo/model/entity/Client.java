@@ -1,4 +1,4 @@
-package ru.t1.java.demo.model;
+package ru.t1.java.demo.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,4 +33,14 @@ public class Client extends AbstractPersistable<Long> {
 
   @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
   private List<Account> accounts;
+
+  @Override
+  public Long getId() {
+    return super.getId();
+  }
+
+  @Override
+  public void setId(Long id) {
+    super.setId(id);
+  }
 }

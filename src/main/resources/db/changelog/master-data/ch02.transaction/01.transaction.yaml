@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: create.table.transaction
+      author: dnovysh
+      dbms: postgresql
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            tableExists:
+              schemaName: ${schema}
+              tableName: transaction
+      changes:
+        - createTable:
+            schemaName: ${schema}
+            tableName: transaction
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  startWith: 10000
+                  incrementBy: 1
+                  generationType: BY DEFAULT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_transaction_id
+              - column:
+                  name: account_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_transaction_account
+                    references: account(id)
+              - column:
+                  name: amount
+                  type: numeric(19, 4)
+                  constraints:
+                    nullable: false
