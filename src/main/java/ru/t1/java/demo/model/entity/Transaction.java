@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,4 +37,8 @@ public class Transaction {
 
   @Column(name = "amount", precision = 19, scale = 4, nullable = false)
   private BigDecimal amount;
+
+  @Column(name = "version", nullable = false)
+  @Version
+  private Long version;
 }

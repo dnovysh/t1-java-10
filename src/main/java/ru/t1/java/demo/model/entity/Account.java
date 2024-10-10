@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -48,4 +49,8 @@ public class Account {
 
   @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
   private List<Transaction> transactions;
+
+  @Column(name = "version", nullable = false)
+  @Version
+  private Long version;
 }

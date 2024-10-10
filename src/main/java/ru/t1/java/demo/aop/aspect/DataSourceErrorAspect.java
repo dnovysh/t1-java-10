@@ -1,4 +1,4 @@
-package ru.t1.java.demo.aop;
+package ru.t1.java.demo.aop.aspect;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,16 +26,17 @@ public class DataSourceErrorAspect {
 
   @AfterThrowing(pointcut = "loggingMethods()", throwing = "ex")
   public void logException(JoinPoint joinPoint, Throwable ex) {
+    val signature = joinPoint.getSignature();
     try {
       val dataSourceErrorLog = DataSourceErrorLog.builder()
-          .methodSignature(joinPoint.getSignature().getName())
+          .methodSignature(signature.toShortString())
           .message(ex.getMessage())
           .stackTrace(ExceptionUtils.getStackTrace(ex))
           .build();
       repository.save(dataSourceErrorLog);
     } catch (Exception e) {
       log.error("Error writing error log to DB for {} with message {}",
-          joinPoint.getSignature().getName(), ex.getMessage(), e);
+          signature.getName(), ex.getMessage(), e);
     }
   }
 }

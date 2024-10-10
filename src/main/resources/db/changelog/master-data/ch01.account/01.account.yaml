@@ -42,3 +42,8 @@ databaseChangeLog:
                   type: numeric(19, 4)
                   constraints:
                     nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false

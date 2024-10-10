@@ -27,3 +27,8 @@ databaseChangeLog:
               - column:
                   name: running_time_millis
                   type: bigint
+              - column:
+                  name: created_date
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
