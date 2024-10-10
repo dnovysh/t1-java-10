@@ -1,6 +1,5 @@
 package ru.t1.java.demo.aop.aspect;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -8,6 +7,7 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import ru.t1.java.demo.model.entity.TimeLimitExceedLog;
@@ -16,10 +16,17 @@ import ru.t1.java.demo.repository.TimeLimitExceedLogRepository;
 @Slf4j
 @Aspect
 @Component
-@RequiredArgsConstructor
 public class ExecutionTimeAspect {
 
   private final TimeLimitExceedLogRepository repository;
+
+  private final long threshold;
+
+  public ExecutionTimeAspect(TimeLimitExceedLogRepository repository,
+      @Value("${t1-aop.time-limit-logging.db.threshold-millis:1000}") long threshold) {
+    this.repository = repository;
+    this.threshold = threshold;
+  }
 
   @Pointcut("within(ru.t1.java.demo..*)")
   public void methodsToBeProfiled() {
@@ -27,14 +34,17 @@ public class ExecutionTimeAspect {
 
   @Around("methodsToBeProfiled()")
   public Object profile(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-    StopWatch sw = new StopWatch(getClass().getSimpleName());
     val signature = proceedingJoinPoint.getSignature();
+    StopWatch sw = new StopWatch(getClass().getSimpleName());
+    sw.start(signature.toShortString());
     try {
-      sw.start(signature.toShortString());
       return proceedingJoinPoint.proceed();
     } finally {
       sw.stop();
-      saveExecutionTime(signature, sw.getTotalTimeMillis());
+      val totalMillis = sw.getTotalTimeMillis();
+      if (totalMillis > threshold) {
+        saveExecutionTime(signature, totalMillis);
+      }
     }
   }
 

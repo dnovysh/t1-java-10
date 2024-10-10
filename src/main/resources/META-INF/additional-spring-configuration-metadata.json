@@ -4,6 +4,16 @@
       "name": "t1.scan-path",
       "type": "java.lang.String",
       "description": "Description for t1.scan-path."
+    },
+    {
+      "name": "t1-aop.time-limit-logging.logger.threshold-millis",
+      "type": "java.lang.Long",
+      "description": "Порог логирования времени выполнения методов с помощью логгера."
+    },
+    {
+      "name": "t1-aop.time-limit-logging.db.threshold-millis",
+      "type": "java.lang.Long",
+      "description": "Порог логирования времени выполнения методов в БД."
     }
   ]
 }

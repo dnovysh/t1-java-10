@@ -24,7 +24,14 @@ spring:
 logging:
   level:
     ROOT: INFO
-    ru.t1.java.demo.controller.ClientController: DEBUG
+    ru.t1.java.demo.controller.ClientController: TRACE
 
 t1:
   scan-path: ru.t1.java.demo
+
+t1-aop:
+  time-limit-logging:
+    logger:
+      threshold-millis: 100
+    db:
+      threshold-millis: 2000
