@@ -34,4 +34,6 @@ t1-aop:
     logger:
       threshold-millis: 100
     db:
+      threshold-millis: 5000
+    kafka:
       threshold-millis: 2000

@@ -13,7 +13,12 @@
     {
       "name": "t1-aop.time-limit-logging.db.threshold-millis",
       "type": "java.lang.Long",
-      "description": "Порог логирования времени выполнения методов в БД."
+      "description": "Порог логирования времени выполнения методов, логирование в БД."
+    },
+    {
+      "name": "t1-aop.time-limit-logging.kafka.threshold-millis",
+      "type": "java.lang.String",
+      "description": "Порог логирования времени выполнения методов, логирование в Kafka."
     }
   ]
 }
