@@ -14,7 +14,7 @@ import ru.t1.java.demo.model.dto.ClientDto;
 import ru.t1.java.demo.model.entity.Client;
 import ru.t1.java.demo.repository.ClientRepository;
 import ru.t1.java.demo.service.ClientService;
-import ru.t1.java.demo.util.ClientMapper;
+import ru.t1.java.demo.mapper.ClientMapper;
 
 @Service
 @Slf4j
