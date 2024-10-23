@@ -21,7 +21,7 @@ public class ExecutionTimeAspect {
     this.logProvider = logProvider;
   }
 
-  @Pointcut("within(ru.t1.java.demo..*)")
+  @Pointcut("@annotation(ru.t1.java.demo.aop.annotation.Track)")
   public void methodsToBeProfiled() {
   }
 

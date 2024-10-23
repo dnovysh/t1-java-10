@@ -19,7 +19,7 @@ public class AopMonitorConfiguration {
   private final long threshold;
 
   public AopMonitorConfiguration(
-      @Value("${t1-aop.time-limit-logging.logger.threshold-millis:200}") long threshold) {
+      @Value("${t1.aop.time-limit-logging.logger.threshold-millis:200}") long threshold) {
     this.threshold = threshold;
   }
 

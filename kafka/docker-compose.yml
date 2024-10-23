@@ -68,6 +68,9 @@ services:
         cub kafka-ready -b kafka1:9191 1 20
         echo "Kafka ready"
         echo "Creating demo topics"
+        kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 1 --replication-factor 1 --topic t1_demo_client_registration
+        kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 1 --replication-factor 1 --topic t1_demo_client_registered
+        kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 1 --replication-factor 1 --topic t1_demo_client_transactions
         kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 1 --replication-factor 1 --topic t1_demo_accounts
         kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 2 --replication-factor 1 --topic t1_demo_transactions
         kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 3 --replication-factor 1 --topic t1_demo_metric_trace

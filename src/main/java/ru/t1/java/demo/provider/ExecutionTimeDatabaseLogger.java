@@ -17,7 +17,7 @@ public class ExecutionTimeDatabaseLogger implements ExecutionTimeAspectLogProvid
   private final long threshold;
 
   public ExecutionTimeDatabaseLogger(TimeLimitExceedLogRepository repository,
-      @Value("${t1-aop.time-limit-logging.db.threshold-millis:1000}") long threshold) {
+      @Value("${t1.aop.time-limit-logging.db.threshold-millis:1000}") long threshold) {
     this.repository = repository;
     this.threshold = threshold;
   }

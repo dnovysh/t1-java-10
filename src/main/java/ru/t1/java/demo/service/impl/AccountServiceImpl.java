@@ -1,38 +1,30 @@
 package ru.t1.java.demo.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
+import lombok.val;
 import org.springframework.stereotype.Service;
+import ru.t1.java.demo.mapper.AccountMapper;
+import ru.t1.java.demo.mapper.Mapper;
+import ru.t1.java.demo.model.dto.AccountDto;
 import ru.t1.java.demo.model.dto.AccountMockDto;
-import ru.t1.java.demo.model.entity.Account;
+import ru.t1.java.demo.repository.AccountRepository;
+import ru.t1.java.demo.repository.ClientRepository;
 import ru.t1.java.demo.service.AccountService;
 
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
+  private final ClientRepository clientRepository;
+  private final AccountRepository accountRepository;
+  private final AccountMapper accountMapper;
+  private final Mapper mapper;
+
+  @Transactional
   @Override
-  public List<AccountMockDto> parseJson() throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-
-    InputStream resource = new ClassPathResource("mock-data/ACCOUNT_DATA.json")
-        .getInputStream();
-
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource))) {
-      AccountMockDto[] accounts = mapper.readValue(reader, AccountMockDto[].class);
-      return Arrays.asList(accounts);
-    }
-  }
-
-  @Override
-  public List<Account> saveMock(Iterable<AccountMockDto> accountMockDtos) {
-    return List.of();
+  public AccountDto saveMock(AccountMockDto accountMockDto) {
+    val account = accountMapper.toEntity(accountMockDto, clientRepository::getReferenceById);
+    return mapper.toDto(accountRepository.saveAndFlush(account));
   }
 }

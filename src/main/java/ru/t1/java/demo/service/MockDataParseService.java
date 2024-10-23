@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface MockDataParseService<T> {
 
-  public List<T> parseJson(String mockFilePath);
+  public List<T> parseJson();
 }

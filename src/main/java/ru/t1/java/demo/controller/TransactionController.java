@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class AccountController {
+public class TransactionController {
 
-  @GetMapping(value = "/accounts/mock/produce-data")
+  @GetMapping(value = "/transactions/mock/produce-data")
   public void produceMockData() {
 
   }

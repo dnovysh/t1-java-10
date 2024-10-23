@@ -11,15 +11,17 @@ import java.util.List;
 import org.springframework.core.io.ClassPathResource;
 import ru.t1.java.demo.service.MockDataParseService;
 
-public class MockDataParseServiceImpl<T> implements MockDataParseService<T> {
+public abstract class MockDataParseServiceImpl<T> implements MockDataParseService<T> {
+
+  public abstract String getMockFilePath();
 
   @Override
-  public List<T> parseJson(String mockFilePath) {
+  public List<T> parseJson() {
     ObjectMapper mapper = new ObjectMapper();
 
     InputStream resource = null;
     try {
-      resource = new ClassPathResource(mockFilePath)
+      resource = new ClassPathResource(getMockFilePath())
           .getInputStream();
     } catch (IOException e) {
       throw new RuntimeException(e);

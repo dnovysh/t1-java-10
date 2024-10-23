@@ -1,30 +1,22 @@
 package ru.t1.java.demo.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 import ru.t1.java.demo.model.dto.ClientDto;
 import ru.t1.java.demo.model.entity.Client;
 
-@Component
-public class ClientMapper {
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    componentModel = MappingConstants.ComponentModel.SPRING)
+public interface ClientMapper {
 
-    public static Client toEntity(ClientDto dto) {
-        if (dto.getMiddleName() == null) {
-//            throw new NullPointerException();
-        }
-        return Client.builder()
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .middleName(dto.getMiddleName())
-                .build();
-    }
+  Client toEntity(ClientDto clientDto);
 
-    public static ClientDto toDto(Client entity) {
-        return ClientDto.builder()
-                .id(entity.getId())
-                .firstName(entity.getFirstName())
-                .lastName(entity.getLastName())
-                .middleName(entity.getMiddleName())
-                .build();
-    }
+  ClientDto toDto(Client client);
 
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  Client partialUpdate(ClientDto clientDto, @MappingTarget Client client);
 }
