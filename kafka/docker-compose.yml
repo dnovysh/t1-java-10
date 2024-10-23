@@ -1,0 +1,81 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.7.1-1-ubi8
+    container_name: zookeeper-t1kafka
+    healthcheck:
+      test: "[[ $$(echo srvr | nc localhost 2181 | grep -oG 'Mode: standalone') = \"Mode: standalone\" ]]"
+      interval: 10s
+      timeout: 1s
+      retries: 30
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka1:
+    image: confluentinc/cp-kafka:7.7.1-1-ubi8
+    container_name: kafka-t1kafka
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    healthcheck:
+      test: nc -z localhost 9191 || exit -1
+      start_period: 30s
+      interval: 3s
+      timeout: 2s
+      retries: 300
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9191,PLAINTEXT_HOST://localhost:9091
+      BOOTSTRAP_SERVERS: kafka1:9191
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    ports:
+      - "9191:9191"
+      - "9091:9091"
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:4.0.3-SNAPSHOT
+    container_name: kafdrop-t1kafka
+    restart: "no"
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka1:9191"
+      JVM_OPTS: "-XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+    depends_on:
+      - "kafka1"
+
+  # https://github.com/confluentinc/examples/blob/5.1.1-post/microservices-orders/docker-compose.yml#L182-L215
+  # This "container" is a workaround to pre-create topics
+  kafka-setup:
+    image: confluentinc/cp-kafka:7.7.1-1-ubi8
+    container_name: setup-t1kafka
+    depends_on:
+      kafka1:
+        condition: service_healthy
+    command:
+      - bash
+      - -c
+      - |
+        echo "Waiting for Kafka to be ready..."
+        sleep 20
+        cub kafka-ready -b kafka1:9191 1 20
+        echo "Kafka ready"
+        echo "Creating demo topics"
+        kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 1 --replication-factor 1 --topic t1_demo_client_registration
+        kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 1 --replication-factor 1 --topic t1_demo_client_registered
+        kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 1 --replication-factor 1 --topic t1_demo_client_transactions
+        kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 1 --replication-factor 1 --topic t1_demo_accounts
+        kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 2 --replication-factor 1 --topic t1_demo_transactions
+        kafka-topics --bootstrap-server kafka1:9191 --create --if-not-exists --partitions 3 --replication-factor 1 --topic t1_demo_metric_trace
+    environment:
+      # The following settings are listed here only to satisfy the image's requirements.
+      # We override the image's `command` anyways, hence this container will not start a broker.
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored

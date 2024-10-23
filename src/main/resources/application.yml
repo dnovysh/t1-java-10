@@ -21,6 +21,28 @@ spring:
         jdbc:
           batch_size: 100
 
+  task:
+    execution:
+      thread-name-prefix: async-task-
+      pool:
+        core-size: 5
+        max-size: 10
+        queue-capacity: 100
+  kafka:
+    bootstrap-servers: localhost:9091
+    client-id: t1-demo-id
+    admin:
+      auto-create: false
+    producer:
+      client-id: t1-demo-producer
+      retries: 3
+    consumer:
+      client-id: t1-demo-consumer
+      group-id: t1-demo
+      max-poll-records: 100
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+
 logging:
   level:
     ROOT: INFO
@@ -28,10 +50,21 @@ logging:
 
 t1:
   scan-path: ru.t1.java.demo
-
-t1-aop:
-  time-limit-logging:
-    logger:
-      threshold-millis: 100
-    db:
-      threshold-millis: 2000
+  kafka:
+    producer:
+      enable: true
+    topic:
+      client_registration: t1_demo_client_registration
+      client_id_registered: t1_demo_client_registered
+      client_transactions: t1_demo_client_transactions
+      t1_demo_accounts: t1_demo_accounts
+      t1_demo_transactions: t1_demo_transactions
+      t1_demo_metric_trace: t1_demo_metric_trace
+  aop:
+    time-limit-logging:
+      logger:
+        threshold-millis: 100
+      db:
+        threshold-millis: 5000
+      kafka:
+        threshold-millis: 200

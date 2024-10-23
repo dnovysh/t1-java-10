@@ -6,14 +6,54 @@
       "description": "Description for t1.scan-path."
     },
     {
-      "name": "t1-aop.time-limit-logging.logger.threshold-millis",
+      "name": "t1.aop.time-limit-logging.logger.threshold-millis",
       "type": "java.lang.Long",
       "description": "Порог логирования времени выполнения методов с помощью логгера."
     },
     {
-      "name": "t1-aop.time-limit-logging.db.threshold-millis",
+      "name": "t1.aop.time-limit-logging.db.threshold-millis",
       "type": "java.lang.Long",
-      "description": "Порог логирования времени выполнения методов в БД."
+      "description": "Порог логирования времени выполнения методов, логирование в БД."
+    },
+    {
+      "name": "t1.aop.time-limit-logging.kafka.threshold-millis",
+      "type": "java.lang.Long",
+      "description": "Порог логирования времени выполнения методов, логирование в Kafka."
+    },
+    {
+      "name": "t1.kafka.producer.enable",
+      "type": "java.lang.Boolean",
+      "description": "Description for t1.kafka.producer.enable."
+    },
+    {
+      "name": "t1.kafka.topic.client_registration",
+      "type": "java.lang.String",
+      "description": "Description for t1.kafka.topic.client_registration."
+    },
+    {
+      "name": "t1.kafka.topic.client_id_registered",
+      "type": "java.lang.String",
+      "description": "Description for t1.kafka.topic.client_id_registered."
+    },
+    {
+      "name": "t1.kafka.topic.client_transactions",
+      "type": "java.lang.String",
+      "description": "Description for t1.kafka.topic.client_transactions."
+    },
+    {
+      "name": "t1.kafka.topic.t1_demo_accounts",
+      "type": "java.lang.String",
+      "description": "Description for t1.kafka.topic.t1_demo_accounts."
+    },
+    {
+      "name": "t1.kafka.topic.t1_demo_transactions",
+      "type": "java.lang.String",
+      "description": "Description for t1.kafka.topic.t1_demo_transactions."
+    },
+    {
+      "name": "t1.kafka.topic.t1_demo_metric_trace",
+      "type": "java.lang.String",
+      "description": "Description for t1.kafka.topic.t1_demo_metric_trace."
     }
   ]
 }

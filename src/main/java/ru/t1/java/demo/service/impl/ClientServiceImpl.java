@@ -1,20 +1,20 @@
 package ru.t1.java.demo.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.t1.java.demo.kafka.KafkaClientProducer;
 import ru.t1.java.demo.model.dto.ClientDto;
 import ru.t1.java.demo.model.entity.Client;
 import ru.t1.java.demo.repository.ClientRepository;
 import ru.t1.java.demo.service.ClientService;
-import ru.t1.java.demo.util.ClientMapper;
 
 @Service
 @Slf4j
@@ -22,30 +22,52 @@ import ru.t1.java.demo.util.ClientMapper;
 public class ClientServiceImpl implements ClientService {
 
   private final ClientRepository repository;
+  private final KafkaClientProducer<Long, ClientDto> kafkaClientProducer;
 
-  @PostConstruct
-  void init() {
-    try {
-      List<Client> clients = parseJson();
-    } catch (IOException e) {
-      log.error("Ошибка во время обработки записей", e);
+  @Override
+  public List<Client> registerClients(List<Client> clients) {
+    List<Client> savedClients = new ArrayList<>();
+    for (Client client : clients) {
+      savedClients.add(registerClient(client));
     }
-//        repository.saveAll(clients);
+    return savedClients;
   }
 
   @Override
-//    @LogExecution
-//    @Track
-//    @HandlingResult
-  public List<Client> parseJson() throws IOException {
+  public Client registerClient(Client client) {
+    if (client.getId() == null) {
+      return saveClient(client);
+    }
+    Optional<Client> check = repository.findById(client.getId());
+    return check.orElseGet(() -> saveClient(client));
+  }
+
+  @Override
+  public List<ClientDto> parseJson() {
+    log.info("Parsing json");
     ObjectMapper mapper = new ObjectMapper();
+    ClientDto[] clients = new ClientDto[0];
+    try {
+      clients = mapper.readValue(new File("src/main/resources/mock-data/CLIENT_DATA.json"),
+          ClientDto[].class);
+    } catch (IOException e) {
+//            throw new RuntimeException(e);
+      log.warn("Exception: ", e);
+    }
+    log.info("Found {} clients", clients.length);
+    return Arrays.asList(clients);
+  }
 
-    ClientDto[] clients = mapper.readValue(
-        new File("src/main/resources/mock-data/CLIENT_DATA.json"),
-        ClientDto[].class);
+  @Override
+  public void clearMiddleName(List<ClientDto> dtos) {
+    log.info("Clearing middle name");
+    dtos.forEach(dto -> dto.setMiddleName(null));
+    log.info("Done clearing middle name");
+  }
 
-    return Arrays.stream(clients)
-        .map(ClientMapper::toEntity)
-        .collect(Collectors.toList());
+  private Client saveClient(Client client) {
+    var saved = repository.save(client);
+    kafkaClientProducer.send(client.getId());
+    return saved;
   }
 }

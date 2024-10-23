@@ -20,7 +20,7 @@ public class DataSourceErrorAspect {
 
   private final DataSourceErrorLogRepository repository;
 
-  @Pointcut("within(ru.t1.java.demo..*)")
+  @Pointcut("@annotation(ru.t1.java.demo.aop.annotation.Track)")
   public void loggingMethods() {
   }
 
