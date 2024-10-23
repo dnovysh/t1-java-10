@@ -20,6 +20,7 @@ public class KafkaAccountConsumer {
   private final AccountService accountService;
 
   @KafkaListener(id = "t1-kafka-account-listener}",
+      clientIdPrefix = "t1-demo-account",
       idIsGroup = false,
       topics = "${t1.kafka.topic.t1_demo_accounts}",
       containerFactory = "accountKafkaListenerContainerFactory")

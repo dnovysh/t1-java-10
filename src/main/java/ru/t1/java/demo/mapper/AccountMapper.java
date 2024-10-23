@@ -15,6 +15,7 @@ public class AccountMapper {
         .client(referenceById.apply(dto.getClientId()))
         .accountType(dto.getAccountType())
         .balance(dto.getBalance())
+        .version(0L)
         .build();
   }
 }

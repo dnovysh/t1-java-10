@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import ru.t1.java.demo.exception.ClientException;
-import ru.t1.java.demo.mapper.ClientMapper;
+import ru.t1.java.demo.mapper.CommonMapper;
 import ru.t1.java.demo.model.dto.ClientDto;
 import ru.t1.java.demo.model.entity.Client;
 import ru.t1.java.demo.repository.ClientRepository;
@@ -18,9 +18,9 @@ public class LegacyClientService {
 
   private final ClientRepository repository;
   private final Map<Long, Client> cache;
-  private final ClientMapper clientMapper;
+  private final CommonMapper clientMapper;
 
-  public LegacyClientService(ClientRepository repository, ClientMapper clientMapper) {
+  public LegacyClientService(ClientRepository repository, CommonMapper clientMapper) {
     this.repository = repository;
     this.clientMapper = clientMapper;
     this.cache = new HashMap<>();
@@ -41,13 +41,13 @@ public class LegacyClientService {
     ClientDto clientDto = null;
 
     if (cache.containsKey(id)) {
-      return clientMapper.toDto(cache.get(id));
+      return clientMapper.clientToClientDto(cache.get(id));
     }
 
     try {
       Client entity = repository.findById(id)
           .orElseThrow(() -> new ClientException("Not Found Client with id %d".formatted(id)));
-      clientDto = clientMapper.toDto(entity);
+      clientDto = clientMapper.clientToClientDto(entity);
       cache.put(id, entity);
     } catch (Exception e) {
       log.error("Error: {}", e.getMessage());

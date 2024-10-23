@@ -20,6 +20,7 @@ public class KafkaTransactionConsumer {
   private final TransactionService transactionService;
 
   @KafkaListener(id = "t1-kafka-transaction-listener}",
+      clientIdPrefix = "t1-demo-transaction",
       idIsGroup = false,
       topics = "${t1.kafka.topic.t1_demo_transactions}",
       containerFactory = "transactionKafkaListenerContainerFactory")

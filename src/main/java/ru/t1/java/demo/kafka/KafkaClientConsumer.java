@@ -9,7 +9,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
-import ru.t1.java.demo.mapper.ClientMapper;
+import ru.t1.java.demo.mapper.CommonMapper;
 import ru.t1.java.demo.model.dto.ClientDto;
 import ru.t1.java.demo.model.entity.Client;
 import ru.t1.java.demo.service.ClientService;
@@ -21,7 +21,7 @@ public class KafkaClientConsumer {
 
   private final ClientService clientService;
 
-  private final ClientMapper clientMapper;
+  private final CommonMapper mapper;
 
   @KafkaListener(id = "t1-kafka-client-listener}",
       idIsGroup = false,
@@ -37,7 +37,7 @@ public class KafkaClientConsumer {
       List<Client> clients = messageList.stream()
           .map(dto -> {
             dto.setFirstName(key + "@" + dto.getFirstName());
-            return clientMapper.toEntity(dto);
+            return mapper.clientDtoToClient(dto);
           })
           .toList();
       clientService.registerClients(clients);

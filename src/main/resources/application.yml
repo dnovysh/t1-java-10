@@ -29,18 +29,19 @@ spring:
         max-size: 10
         queue-capacity: 100
   kafka:
-    bootstrap-servers: ${KAFKA_SERVER:localhost:9092}
-    client-id: t1-demo-client
+    bootstrap-servers: localhost:9091
+    client-id: t1-demo-id
     admin:
       auto-create: false
     producer:
+      client-id: t1-demo-producer
       retries: 3
     consumer:
+      client-id: t1-demo-consumer
       group-id: t1-demo
-      max-poll-records: 10
+      max-poll-records: 100
       enable-auto-commit: false
       auto-offset-reset: earliest
-
 
 logging:
   level:
@@ -66,4 +67,4 @@ t1:
       db:
         threshold-millis: 5000
       kafka:
-        threshold-millis: 2000
+        threshold-millis: 200

@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
-import ru.t1.java.demo.mapper.Mapper;
+import ru.t1.java.demo.mapper.CommonMapper;
 import ru.t1.java.demo.mapper.TransactionMapper;
 import ru.t1.java.demo.model.dto.TransactionDto;
 import ru.t1.java.demo.model.dto.TransactionMockDto;
@@ -20,14 +20,14 @@ public class TransactionServiceImpl implements TransactionService {
   private final AccountRepository accountRepository;
   private final TransactionRepository transactionRepository;
   private final TransactionMapper transactionMapper;
-  private final Mapper mapper;
+  private final CommonMapper mapper;
 
   @Transactional
   @Override
   public TransactionDto saveMock(TransactionMockDto transactionMockDto) {
     val transaction = transactionMapper.toEntity(transactionMockDto,
         accountRepository::getReferenceById);
-    return mapper.toDto(transactionRepository.saveAndFlush(transaction));
+    return mapper.transactionToTransactionDto(transactionRepository.saveAndFlush(transaction));
   }
 
   public List<TransactionDto> saveMocks(List<TransactionMockDto> transactionMockDtos) {
@@ -35,6 +35,6 @@ public class TransactionServiceImpl implements TransactionService {
         .map((dto) -> transactionMapper.toEntity(dto, accountRepository::getReferenceById))
         .toList();
     val savedTransactions = transactionRepository.saveAllAndFlush(transactions);
-    return savedTransactions.stream().map(mapper::toDto).toList();
+    return savedTransactions.stream().map(mapper::transactionToTransactionDto).toList();
   }
 }

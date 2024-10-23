@@ -14,6 +14,7 @@ public class TransactionMapper {
         .id(dto.getId())
         .account(referenceById.apply(dto.getAccountId()))
         .amount(dto.getAmount())
+        .version(0L)
         .build();
   }
 }

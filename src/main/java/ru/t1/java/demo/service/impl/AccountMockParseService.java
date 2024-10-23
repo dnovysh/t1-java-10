@@ -8,6 +8,10 @@ public class AccountMockParseService extends MockDataParseServiceImpl<AccountMoc
 
   public final String ACCOUNT_MOCK_FILE_PATH = "mock-data/ACCOUNT_DATA.json";
 
+  public AccountMockParseService() {
+    super(AccountMockDto[].class);
+  }
+
   @Override
   public String getMockFilePath() {
     return ACCOUNT_MOCK_FILE_PATH;

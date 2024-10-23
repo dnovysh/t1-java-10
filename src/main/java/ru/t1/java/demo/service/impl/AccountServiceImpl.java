@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import ru.t1.java.demo.mapper.AccountMapper;
-import ru.t1.java.demo.mapper.Mapper;
+import ru.t1.java.demo.mapper.CommonMapper;
 import ru.t1.java.demo.model.dto.AccountDto;
 import ru.t1.java.demo.model.dto.AccountMockDto;
 import ru.t1.java.demo.repository.AccountRepository;
@@ -20,13 +20,13 @@ public class AccountServiceImpl implements AccountService {
   private final ClientRepository clientRepository;
   private final AccountRepository accountRepository;
   private final AccountMapper accountMapper;
-  private final Mapper mapper;
+  private final CommonMapper mapper;
 
   @Transactional
   @Override
   public AccountDto saveMock(AccountMockDto accountMockDto) {
     val account = accountMapper.toEntity(accountMockDto, clientRepository::getReferenceById);
-    return mapper.toDto(accountRepository.saveAndFlush(account));
+    return mapper.accountToAccountDto(accountRepository.saveAndFlush(account));
   }
 
   @Transactional
@@ -36,6 +36,6 @@ public class AccountServiceImpl implements AccountService {
         .map((dto) -> accountMapper.toEntity(dto, clientRepository::getReferenceById))
         .toList();
     val savedAccounts = accountRepository.saveAllAndFlush(accounts);
-    return savedAccounts.stream().map(mapper::toDto).toList();
+    return savedAccounts.stream().map(mapper::accountToAccountDto).toList();
   }
 }

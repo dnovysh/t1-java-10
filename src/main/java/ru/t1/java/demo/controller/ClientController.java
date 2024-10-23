@@ -7,8 +7,9 @@ import lombok.val;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.t1.java.demo.aop.annotation.Track;
 import ru.t1.java.demo.exception.ClientException;
-import ru.t1.java.demo.mapper.ClientMapper;
+import ru.t1.java.demo.mapper.CommonMapper;
 import ru.t1.java.demo.service.ClientService;
 
 @RestController
@@ -18,11 +19,11 @@ public class ClientController {
 
   private final ClientService clientService;
 
-  private final ClientMapper clientMapper;
+  private final CommonMapper mapper;
 
   //  @HandlingResult
 //  @LogException
-//  @Track
+  @Track
   @GetMapping(value = "/client")
   public void doSomething() throws IOException, InterruptedException {
 //        try {
@@ -38,6 +39,6 @@ public class ClientController {
   @PostMapping(value = "/clients/mock/register")
   public void registerMockClient() {
     val dtos = clientService.parseJson();
-    clientService.registerClients(dtos.stream().map(clientMapper::toEntity).toList());
+    clientService.registerClients(dtos.stream().map(mapper::clientDtoToClient).toList());
   }
 }
