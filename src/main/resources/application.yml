@@ -41,6 +41,7 @@ spring:
       enable-auto-commit: false
       auto-offset-reset: earliest
 
+
 logging:
   level:
     ROOT: INFO

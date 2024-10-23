@@ -1,6 +1,7 @@
 package ru.t1.java.demo.service.impl;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,15 @@ public class AccountServiceImpl implements AccountService {
   public AccountDto saveMock(AccountMockDto accountMockDto) {
     val account = accountMapper.toEntity(accountMockDto, clientRepository::getReferenceById);
     return mapper.toDto(accountRepository.saveAndFlush(account));
+  }
+
+  @Transactional
+  @Override
+  public List<AccountDto> saveMocks(List<AccountMockDto> accountMockDtos) {
+    val accounts = accountMockDtos.stream()
+        .map((dto) -> accountMapper.toEntity(dto, clientRepository::getReferenceById))
+        .toList();
+    val savedAccounts = accountRepository.saveAllAndFlush(accounts);
+    return savedAccounts.stream().map(mapper::toDto).toList();
   }
 }

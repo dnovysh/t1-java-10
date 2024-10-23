@@ -1,6 +1,7 @@
 package ru.t1.java.demo.service.impl;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,13 @@ public class TransactionServiceImpl implements TransactionService {
     val transaction = transactionMapper.toEntity(transactionMockDto,
         accountRepository::getReferenceById);
     return mapper.toDto(transactionRepository.saveAndFlush(transaction));
+  }
+
+  public List<TransactionDto> saveMocks(List<TransactionMockDto> transactionMockDtos) {
+    val transactions = transactionMockDtos.stream()
+        .map((dto) -> transactionMapper.toEntity(dto, accountRepository::getReferenceById))
+        .toList();
+    val savedTransactions = transactionRepository.saveAllAndFlush(transactions);
+    return savedTransactions.stream().map(mapper::toDto).toList();
   }
 }
